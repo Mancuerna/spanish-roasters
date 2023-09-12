@@ -130,4 +130,4 @@ dist
 .pnp.*
 
 # Crawlee results
-.storage/
+storage/
