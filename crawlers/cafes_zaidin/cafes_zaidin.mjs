@@ -5,6 +5,11 @@ log.setLevel(log.LEVELS.INFO);
 await purgeDefaultStorages();
 
 const crawler = new PlaywrightCrawler({
+  launchContext: {
+    launchOptions: {
+      headless: true,
+    },
+  },
   requestHandler: async ({ page, request, enqueueLinks }) => {
     log.info(`Proccessing: ${request.url}`);
     if (request.label === "COFFEE") {
@@ -20,7 +25,7 @@ const crawler = new PlaywrightCrawler({
         .textContent();
       const farm = await productDescriptionContainer
         .locator("p")
-        .filter({ hasText: "Finca: " })
+        .filter({ hasText: "Finca:" })
         .textContent();
       const proccess = await productDescriptionContainer
         .locator("p")
@@ -28,7 +33,7 @@ const crawler = new PlaywrightCrawler({
         .textContent();
       const altitude = await productDescriptionContainer
         .locator("p")
-        .filter({ hasText: "Altura: " })
+        .filter({ hasText: "Altitud: " })
         .textContent();
       const variety = await productDescriptionContainer
         .locator("p")
@@ -36,19 +41,19 @@ const crawler = new PlaywrightCrawler({
         .textContent();
       const tastingNotes = await productDescriptionContainer
         .locator("p")
-        .filter({ hasText: "Notas de cata: " })
+        .filter({ hasText: "cata: " })
         .textContent();
 
       const results = {
         url: request.url,
         coffeeName: coffeeName,
         roasterName: ROASTER_NAME,
-        region: region.slice(8).trim(),
-        farm: farm.slice(7).trim(),
-        proccess: proccess.slice(9).trim(),
-        altitude: altitude.slice(8).trim(),
-        variety: variety.slice(10).trim(),
-        tastingNotes: tastingNotes.slice(15).trim(),
+        region: region.split(':')[1].trim(),
+        farm: farm.split(':')[1].trim(),
+        proccess: proccess.split(':')[1].trim(),
+        altitude: altitude.split(':')[1].trim(),
+        variety: variety.split(':')[1].trim(),
+        tastingNotes: tastingNotes.split(':')[1].trim(),
       };
       log.info(coffeeName);
       await Dataset.pushData(results);
