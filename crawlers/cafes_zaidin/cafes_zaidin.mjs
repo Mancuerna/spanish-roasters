@@ -35,7 +35,7 @@ const crawler = new PlaywrightCrawler({
         .locator("p")
         .filter({ hasText: "Altitud: " })
         .textContent();
-      const variety = await productDescriptionContainer
+      const varietal = await productDescriptionContainer
         .locator("p")
         .filter({ hasText: "Variedad: " })
         .textContent();
@@ -52,7 +52,7 @@ const crawler = new PlaywrightCrawler({
         farm: farm.split(':')[1].trim(),
         proccess: proccess.split(':')[1].trim(),
         altitude: altitude.split(':')[1].trim(),
-        variety: variety.split(':')[1].trim(),
+        varietal: varietal.split(':')[1].trim(),
         tastingNotes: tastingNotes.split(':')[1].trim(),
       };
       log.info(coffeeName);
