@@ -11,7 +11,7 @@ const crawler = new PlaywrightCrawler({
     },
   },
   requestHandler: async ({ page, request, enqueueLinks }) => {
-    log.info(`Proccessing: ${request.url}`);
+    log.info(`Proccessing: ${request.url}, ${request.label}`);
     if (request.label === "COFFEE") {
       const coffeeName = await page
         .locator('h1[class="product-details__product-title ec-header-h3"]')
@@ -43,17 +43,22 @@ const crawler = new PlaywrightCrawler({
         .locator("p")
         .filter({ hasText: "cata: " })
         .textContent();
-
+      /*       const coffeeImage = await productDescriptionContainer
+        .locator(
+          'img[class="details-gallery__picture details-gallery__photoswipe-index-0"]'
+        )
+        .getAttribute("src"); */
       const results = {
         url: request.url,
         coffeeName: coffeeName,
         roasterName: ROASTER_NAME,
-        region: region.split(':')[1].trim(),
-        farm: farm.split(':')[1].trim(),
-        proccess: proccess.split(':')[1].trim(),
-        altitude: altitude.split(':')[1].trim(),
-        varietal: varietal.split(':')[1].trim(),
-        tastingNotes: tastingNotes.split(':')[1].trim(),
+        region: region.split(":")[1].trim(),
+        farm: farm.split(":")[1].trim(),
+        proccess: proccess.split(":")[1].trim(),
+        altitude: altitude.split(":")[1].trim(),
+        varietal: varietal.split(":")[1].trim(),
+        tastingNotes: tastingNotes.split(":")[1].trim(),
+        // coffeeImage: coffeeImage,
       };
       log.info(coffeeName);
       await Dataset.pushData(results);
@@ -68,11 +73,23 @@ const crawler = new PlaywrightCrawler({
       });
     } else {
       await page.waitForSelector('div[class="grid-category__card"]');
+      const originContainer = await page
+        .locator(
+          'div[class="grid__categories grid__categories--advanced grid__categories--medium-items grid__categories--aspect-ratio-1333 grid__categories--appearance-hover"]'
+        )
+        .first();
+      const originHrefList = await originContainer.locator(
+        'a[class="grid-category__title"]'
+      );
+      const originUrls = [];
+      for (const href of await originHrefList.all()) {
+        originUrls.push(await href.getAttribute("href"));
+      }
       await enqueueLinks({
         transformRequestFunction(req) {
           return filterWrongOrigins(req);
         },
-        selector: 'a[class="grid-category__title"]',
+        urls: originUrls,
         label: "ORIGIN",
       });
     }
