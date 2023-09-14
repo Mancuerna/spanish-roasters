@@ -43,11 +43,11 @@ const crawler = new PlaywrightCrawler({
         .locator("p")
         .filter({ hasText: "cata: " })
         .textContent();
-      /*       const coffeeImage = await productDescriptionContainer
+      const coffeeImage = await page
         .locator(
           'img[class="details-gallery__picture details-gallery__photoswipe-index-0"]'
         )
-        .getAttribute("src"); */
+        .getAttribute("src");
       const results = {
         url: request.url,
         coffeeName: coffeeName,
@@ -58,7 +58,7 @@ const crawler = new PlaywrightCrawler({
         altitude: altitude.split(":")[1].trim(),
         varietal: varietal.split(":")[1].trim(),
         tastingNotes: tastingNotes.split(":")[1].trim(),
-        // coffeeImage: coffeeImage,
+        coffeeImage: coffeeImage,
       };
       log.info(coffeeName);
       await Dataset.pushData(results);
