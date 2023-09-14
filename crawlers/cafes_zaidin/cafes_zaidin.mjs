@@ -14,52 +14,53 @@ const crawler = new PlaywrightCrawler({
     log.info(`Proccessing: ${request.url}, ${request.label}`);
     if (request.label === "COFFEE") {
       const coffeeName = await page
-        .locator('h1[class="product-details__product-title ec-header-h3"]')
-        .textContent();
-      const productDescriptionContainer = await page.locator(
-        'div[class="product-details__product-description"]'
-      );
-      const region = await productDescriptionContainer
-        .locator("p")
-        .filter({ hasText: "Región: " })
-        .textContent();
-      const farm = await productDescriptionContainer
-        .locator("p")
-        .filter({ hasText: "Finca:" })
-        .textContent();
-      const proccess = await productDescriptionContainer
-        .locator("p")
-        .filter({ hasText: "Proceso: " })
-        .textContent();
-      const altitude = await productDescriptionContainer
-        .locator("p")
-        .filter({ hasText: "Altitud: " })
-        .textContent();
-      const varietal = await productDescriptionContainer
-        .locator("p")
-        .filter({ hasText: "Variedad: " })
-        .textContent();
-      const tastingNotes = await productDescriptionContainer
-        .locator("p")
-        .filter({ hasText: "cata: " })
-        .textContent();
-      const coffeeImage = await page
-        .locator(
-          'img[class="details-gallery__picture details-gallery__photoswipe-index-0"]'
-        )
-        .getAttribute("src");
-      const results = {
-        url: request.url,
-        coffeeName: coffeeName,
-        roasterName: ROASTER_NAME,
-        region: region.split(":")[1].trim(),
-        farm: farm.split(":")[1].trim(),
-        proccess: proccess.split(":")[1].trim(),
-        altitude: altitude.split(":")[1].trim(),
-        varietal: varietal.split(":")[1].trim(),
-        tastingNotes: tastingNotes.split(":")[1].trim(),
-        coffeeImage: coffeeImage,
-      };
+          .locator('h1[class="product-details__product-title ec-header-h3"]')
+          .textContent(),
+        productDescriptionContainer = await page.locator(
+          'div[class="product-details__product-description"]'
+        ),
+        region = await productDescriptionContainer
+          .locator("p")
+          .filter({ hasText: "Región: " })
+          .textContent(),
+        farm = await productDescriptionContainer
+          .locator("p")
+          .filter({ hasText: "Finca:" })
+          .textContent(),
+        proccess = await productDescriptionContainer
+          .locator("p")
+          .filter({ hasText: "Proceso: " })
+          .textContent(),
+        altitude = await productDescriptionContainer
+          .locator("p")
+          .filter({ hasText: "Altitud: " })
+          .textContent(),
+        varietal = await productDescriptionContainer
+          .locator("p")
+          .filter({ hasText: "Variedad: " })
+          .textContent(),
+        tastingNotes = await productDescriptionContainer
+          .locator("p")
+          .filter({ hasText: "cata: " })
+          .textContent(),
+        coffeeImage = await page
+          .locator(
+            'img[class="details-gallery__picture details-gallery__photoswipe-index-0"]'
+          )
+          .getAttribute("src"),
+        results = {
+          url: request.url,
+          coffeeName: coffeeName,
+          roasterName: ROASTER_NAME,
+          region: region.split(":")[1].trim(),
+          farm: farm.split(":")[1].trim(),
+          proccess: proccess.split(":")[1].trim(),
+          altitude: altitude.split(":")[1].trim(),
+          varietal: varietal.split(":")[1].trim(),
+          tastingNotes: tastingNotes.split(":")[1].trim(),
+          coffeeImage: coffeeImage,
+          dateAdded: new Date().getTime(),
+        };
       log.info(coffeeName);
       await Dataset.pushData(results);
     }
