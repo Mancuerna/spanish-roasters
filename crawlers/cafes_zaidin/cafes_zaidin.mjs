@@ -13,6 +13,7 @@ const crawler = new PlaywrightCrawler({
   requestHandler: async ({ page, request, enqueueLinks }) => {
     log.info(`Proccessing: ${request.url}, ${request.label}`);
     if (request.label === "COFFEE") {
+      const active = true;
       const coffeeName = await page
           .locator('h1[class="product-details__product-title ec-header-h3"]')
           .textContent(),
@@ -60,6 +61,7 @@ const crawler = new PlaywrightCrawler({
           tastingNotes: tastingNotes.split(":")[1].trim(),
           coffeeImage: coffeeImage,
           dateAdded: new Date().getTime(),
+          active,
         };
       log.info(coffeeName);
       await Dataset.pushData(results);
