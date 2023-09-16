@@ -58,7 +58,7 @@ router.addHandler("COFFEE", async ({ request, page, log }) => {
   await Dataset.pushData(results);
 });
 
-router.addHandler("ORIGIN", async ({ request, page, enqueueLinks,log }) => {
+router.addHandler("ORIGIN", async ({ request, page, enqueueLinks, log }) => {
   await page.waitForSelector(
     'a[class="breadcrumbs__link ec-link ec-link--muted "]'
   );
