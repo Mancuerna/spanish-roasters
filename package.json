@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@prisma/client": "^5.3.1",
     "crawlee": "^3.5.3",
     "playwright": "^1.37.1",
     "prisma": "^5.3.1"
