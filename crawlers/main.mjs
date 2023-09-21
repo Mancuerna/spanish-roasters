@@ -1,4 +1,5 @@
 import { crawler as zaidinCrawler } from "./cafes_zaidin/main.mjs";
+import { log, purgeDefaultStorages } from "crawlee";
 
 log.setLevel(log.LEVELS.INFO);
 log.debug("Setting up crawler.");
