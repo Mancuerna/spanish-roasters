@@ -1,5 +1,5 @@
 import { createPlaywrightRouter, Dataset, log } from "crawlee";
-
+import { insertCoffee } from "../../prisma/database_controller.mjs";
 export const router = createPlaywrightRouter();
 
 const ROASTER_NAME = "Cafés Zaidín";
@@ -55,7 +55,7 @@ router.addHandler("COFFEE", async ({ request, page, log }) => {
       dateAdded: new Date().getTime(),
       active,
     };
-  await Dataset.pushData(results);
+  await insertCoffee(results);
 });
 
 router.addHandler("ORIGIN", async ({ request, page, enqueueLinks, log }) => {
