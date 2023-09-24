@@ -4,7 +4,8 @@ const prisma = new PrismaClient();
 
 const insertCoffee = async (coffee) => {
     coffee = { data: coffee };
-    await prisma.coffee_roasters.create(coffee);
+    if (coffee.data.url && getCoffee(coffee.url) !== null)
+      await prisma.coffee_roasters.create(coffee);
     disconnect();
   },
   disconnect = async () => {
