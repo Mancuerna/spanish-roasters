@@ -14,7 +14,7 @@ router.addHandler("COFFEE", async ({ request, page, log }) => {
     ),
     region = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "Región: " })
+      .filter({ hasText: "Región:" })
       .textContent(),
     farm = await productDescriptionContainer
       .locator("p")
@@ -22,19 +22,19 @@ router.addHandler("COFFEE", async ({ request, page, log }) => {
       .textContent(),
     proccess = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "Proceso: " })
+      .filter({ hasText: "Proceso:" })
       .textContent(),
     altitude = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "Altitud: " })
+      .filter({ hasText: /Altitud:|Altura:/i })
       .textContent(),
     varietal = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "Variedad: " })
+      .filter({ hasText: "Variedad:" })
       .textContent(),
     tastingNotes = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "cata: " })
+      .filter({ hasText: /notas de cata\:|nota de cata\:|cata\:/i })
       .textContent(),
     coffeeImage = await page
       .locator(
@@ -93,7 +93,12 @@ router.addDefaultHandler(async ({ request, page, enqueueLinks, log }) => {
 });
 
 const filterWrongOrigins = (req) => {
-  const WRONG_ORIGINS = ["Infusiones", "Gama-de-caf", "Blends"];
+  const WRONG_ORIGINS = [
+    "Infusiones",
+    "Gama-de-caf",
+    "Blends",
+    "Descafeinados",
+  ];
   if (WRONG_ORIGINS.some((element) => req.url.includes(element))) {
     return false;
   }
