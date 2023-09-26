@@ -5,6 +5,7 @@ export const crawler = new PlaywrightCrawler({
   launchContext: {
     launchOptions: {
       headless: true,
+      maxRequestRetries: 0,
     },
   },
   requestHandler: router,
