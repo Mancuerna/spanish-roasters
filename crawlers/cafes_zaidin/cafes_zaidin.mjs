@@ -1,5 +1,5 @@
 import { createPlaywrightRouter, Dataset, log } from "crawlee";
-
+import { insertCoffee } from "../../prisma/database_controller.mjs";
 export const router = createPlaywrightRouter();
 
 const ROASTER_NAME = "Cafés Zaidín";
@@ -14,7 +14,7 @@ router.addHandler("COFFEE", async ({ request, page, log }) => {
     ),
     region = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "Región: " })
+      .filter({ hasText: "Región:" })
       .textContent(),
     farm = await productDescriptionContainer
       .locator("p")
@@ -22,19 +22,19 @@ router.addHandler("COFFEE", async ({ request, page, log }) => {
       .textContent(),
     proccess = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "Proceso: " })
+      .filter({ hasText: "Proceso:" })
       .textContent(),
     altitude = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "Altitud: " })
+      .filter({ hasText: /Altitud:|Altura:/i })
       .textContent(),
     varietal = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "Variedad: " })
+      .filter({ hasText: "Variedad:" })
       .textContent(),
     tastingNotes = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: "cata: " })
+      .filter({ hasText: /notas de cata\:|nota de cata\:|cata\:/i })
       .textContent(),
     coffeeImage = await page
       .locator(
@@ -55,7 +55,7 @@ router.addHandler("COFFEE", async ({ request, page, log }) => {
       dateAdded: new Date().getTime(),
       active,
     };
-  await Dataset.pushData(results);
+  await insertCoffee(results);
 });
 
 router.addHandler("ORIGIN", async ({ request, page, enqueueLinks, log }) => {
@@ -93,7 +93,12 @@ router.addDefaultHandler(async ({ request, page, enqueueLinks, log }) => {
 });
 
 const filterWrongOrigins = (req) => {
-  const WRONG_ORIGINS = ["Infusiones", "Gama-de-caf", "Blends"];
+  const WRONG_ORIGINS = [
+    "Infusiones",
+    "Gama-de-caf",
+    "Blends",
+    "Descafeinados",
+  ];
   if (WRONG_ORIGINS.some((element) => req.url.includes(element))) {
     return false;
   }
