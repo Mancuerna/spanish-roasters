@@ -35,7 +35,7 @@ router.addHandler("COFFEE", async ({ request, page }) => {
       .textContent(),
     tastingNotes = await productDescriptionContainer
       .locator("p")
-      .filter({ hasText: /notas de cata\:|nota de cata\:|cata\:/i })
+      .filter({ hasText: /notas de cata\:|nota de cata\:|cata\:|notas\:/i })
       .textContent(),
     coffeeImage = await page
       .locator(
