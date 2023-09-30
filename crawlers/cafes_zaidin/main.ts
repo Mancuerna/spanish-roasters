@@ -7,6 +7,7 @@ const crawler = new PlaywrightCrawler({
       headless: true,
     },
   },
+  maxRequestRetries: 0,
   requestHandler: router,
 });
 
