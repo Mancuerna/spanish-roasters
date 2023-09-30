@@ -1,12 +1,11 @@
-import { createPlaywrightRouter, Dataset, log } from "crawlee";
-import { insertCoffee } from "../../prisma/database_controller.mjs";
-export const router = createPlaywrightRouter();
+import { createPlaywrightRouter } from "crawlee";
+import { insertCoffee } from "../../prisma/database_controller";
+const router = createPlaywrightRouter(),
+  ROASTER_NAME = "Cafés Zaidín";
 
-const ROASTER_NAME = "Cafés Zaidín";
-
-router.addHandler("COFFEE", async ({ request, page, log }) => {
-  const active = true;
-  const coffeeName = await page
+router.addHandler("COFFEE", async ({ request, page }) => {
+  const active = true,
+    coffeeName = await page
       .locator('h1[class="product-details__product-title ec-header-h3"]')
       .textContent(),
     productDescriptionContainer = await page.locator(
@@ -45,12 +44,12 @@ router.addHandler("COFFEE", async ({ request, page, log }) => {
       url: request.url,
       coffeeName: coffeeName,
       roasterName: ROASTER_NAME,
-      region: region.split(":")[1].trim(),
-      farm: farm.split(":")[1].trim(),
-      proccess: proccess.split(":")[1].trim(),
-      altitude: altitude.split(":")[1].trim(),
-      varietal: varietal.split(":")[1].trim(),
-      tastingNotes: tastingNotes.split(":")[1].trim(),
+      region: region?.split(":")[1].trim(),
+      farm: farm?.split(":")[1].trim(),
+      proccess: proccess?.split(":")[1].trim(),
+      altitude: altitude?.split(":")[1].trim(),
+      varietal: varietal?.split(":")[1].trim(),
+      tastingNotes: tastingNotes?.split(":")[1].trim(),
       coffeeImage: coffeeImage,
       dateAdded: new Date().getTime(),
       active,
@@ -58,7 +57,7 @@ router.addHandler("COFFEE", async ({ request, page, log }) => {
   await insertCoffee(results);
 });
 
-router.addHandler("ORIGIN", async ({ request, page, enqueueLinks, log }) => {
+router.addHandler("ORIGIN", async ({ page, enqueueLinks }) => {
   await page.waitForSelector(
     'a[class="breadcrumbs__link ec-link ec-link--muted "]'
   );
@@ -71,7 +70,7 @@ router.addHandler("ORIGIN", async ({ request, page, enqueueLinks, log }) => {
 router.addDefaultHandler(async ({ request, page, enqueueLinks, log }) => {
   log.debug(`Proccessing: ${request.url}, ${request.label}`);
   await page.waitForSelector('div[class="grid-category__card"]');
-  const originContainer = await page
+  const originContainer = page
     .locator(
       'div[class="grid__categories grid__categories--advanced grid__categories--medium-items grid__categories--aspect-ratio-1333 grid__categories--appearance-hover"]'
     )
@@ -79,9 +78,9 @@ router.addDefaultHandler(async ({ request, page, enqueueLinks, log }) => {
   const originHrefList = await originContainer.locator(
     'a[class="grid-category__title"]'
   );
-  const originUrls = [];
+  const originUrls: string[] = [];
   for (const href of await originHrefList.all()) {
-    originUrls.push(await href.getAttribute("href"));
+    originUrls.push((await href.getAttribute("href")) || "");
   }
   await enqueueLinks({
     transformRequestFunction(req) {
@@ -92,7 +91,7 @@ router.addDefaultHandler(async ({ request, page, enqueueLinks, log }) => {
   });
 });
 
-const filterWrongOrigins = (req) => {
+const filterWrongOrigins = (req: any) => {
   const WRONG_ORIGINS = [
     "Infusiones",
     "Gama-de-caf",
@@ -104,3 +103,5 @@ const filterWrongOrigins = (req) => {
   }
   return req;
 };
+
+export { router };
