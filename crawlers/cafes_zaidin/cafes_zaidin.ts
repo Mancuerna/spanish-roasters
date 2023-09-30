@@ -1,5 +1,7 @@
 import { createPlaywrightRouter } from "crawlee";
 import { insertCoffee } from "../../prisma/database_controller";
+import { Coffee } from "../../prisma/myTypes";
+
 const router = createPlaywrightRouter(),
   ROASTER_NAME = "Cafés Zaidín";
 
@@ -40,17 +42,17 @@ router.addHandler("COFFEE", async ({ request, page }) => {
         'img[class="details-gallery__picture details-gallery__photoswipe-index-0"]'
       )
       .getAttribute("src"),
-    results = {
+    results: Coffee = {
       url: request.url,
-      coffeeName: coffeeName,
+      coffeeName: coffeeName || "",
       roasterName: ROASTER_NAME,
-      region: region?.split(":")[1].trim(),
-      farm: farm?.split(":")[1].trim(),
-      proccess: proccess?.split(":")[1].trim(),
-      altitude: altitude?.split(":")[1].trim(),
-      varietal: varietal?.split(":")[1].trim(),
-      tastingNotes: tastingNotes?.split(":")[1].trim(),
-      coffeeImage: coffeeImage,
+      region: region?.split(":")[1].trim() || "",
+      farm: farm?.split(":")[1].trim() || "",
+      proccess: proccess?.split(":")[1].trim() || "",
+      altitude: altitude?.split(":")[1].trim() || "",
+      varietal: varietal?.split(":")[1].trim() || "",
+      tastingNotes: tastingNotes?.split(":")[1].trim() || "",
+      coffeeImage: coffeeImage || "",
       dateAdded: new Date().getTime(),
       active,
     };
