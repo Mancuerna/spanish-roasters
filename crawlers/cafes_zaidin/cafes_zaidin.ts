@@ -77,7 +77,7 @@ router.addDefaultHandler(async ({ request, page, enqueueLinks, log }) => {
       'div[class="grid__categories grid__categories--advanced grid__categories--medium-items grid__categories--aspect-ratio-1333 grid__categories--appearance-hover"]'
     )
     .first();
-  const originHrefList = await originContainer.locator(
+  const originHrefList = originContainer.locator(
     'a[class="grid-category__title"]'
   );
   const originUrls: string[] = [];
