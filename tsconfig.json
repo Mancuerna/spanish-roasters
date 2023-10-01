@@ -1,0 +1,10 @@
+{
+  "extends": "@apify/tsconfig",
+  "compilerOptions": {
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "outDir": "dist"
+  },
+  "include": ["./crawlers/**/*", "./prisma/*"]
+}
