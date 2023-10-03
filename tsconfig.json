@@ -6,5 +6,5 @@
     "target": "ES2022",
     "outDir": "dist"
   },
-  "include": ["./crawlers/**/*", "./prisma/*"]
+  "include": ["./crawlers/**/*", "./prisma/*", "./api/*"]
 }
