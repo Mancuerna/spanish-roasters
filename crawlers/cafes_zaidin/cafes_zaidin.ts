@@ -1,10 +1,11 @@
 import { createPlaywrightRouter } from "crawlee";
-import { insertCoffee } from "../../prisma/database_controller";
 import { Coffee } from "../../prisma/myTypes";
 
 const router = createPlaywrightRouter(),
-  ROASTER_NAME = "Cafés Zaidín";
-
+  axios = require("axios"),
+  ROASTER_NAME = "Cafés Zaidín",
+  DATABASE_URL = process.env.DATABASE_URL || "",
+  DATABASE_PORT = process.env.DATABASE_PORT || "";
 router.addHandler("COFFEE", async ({ request, page }) => {
   const active = true,
     coffeeName = await page
@@ -56,7 +57,7 @@ router.addHandler("COFFEE", async ({ request, page }) => {
       dateAdded: new Date().getTime(),
       active,
     };
-  await insertCoffee(results);
+  await axios.post(`${DATABASE_URL}:${DATABASE_PORT}`, results);
 });
 
 router.addHandler("ORIGIN", async ({ page, enqueueLinks }) => {
